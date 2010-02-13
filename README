@@ -1,0 +1,112 @@
+*****************************************************************
+k-twi
+twitter client for Japanese mobile phone by CakePHP. 
+Docomo, softbank and au.
+
+作った人：hosimitu
+メール:hosimitu+k-twi@gmail.com
+URL:http://twitter.hosimitu.com/
+*****************************************************************
+
+
+-----------------------------------------------------------------
+■必要なプログラム
+-----------------------------------------------------------------
+開発時はCakePHP1.2.5をベースにしています。
+また以下のコンポーネントを使用させてもらっています。
+それぞれの使い方はそれぞれの場所で。
+
+OAuth consumer component
+git://github.com/cakebaker/oauth-consumer-component.git
+
+KtaiLibrary
+git://github.com/MASA-P/KtaiLibrary.git
+
+
+-----------------------------------------------------------------
+■はじめに
+-----------------------------------------------------------------
+　このプログラムはPHPの勉強とCakePHPの勉強のために作ったため、相当
+恥ずかしいコードとなっておりますのでご注意ください。
+　公開するにあたった経緯は、動かしているプログラムがtwitter側から
+認証されなくなってしまいそれを修正することが出来なかったからです。
+個別発言は取得出来るのですが、ライムラインの取得がなぜか無理になり
+ました。どうしてなんだろう？
+動作確認自体は行えているので、設定をキチンとすれば動きます。
+
+
+-----------------------------------------------------------------
+■動作環境
+-----------------------------------------------------------------
+　PHP5以降の環境が必要となります。また、データベースも必要です。
+私の環境ではMySQLを使っていました。
+
+
+-----------------------------------------------------------------
+■使い方
+-----------------------------------------------------------------
+　コントローラー、モデル、ビューをそれぞれ配置してください。
+『users_controller.php』内の『function add』の中身のコールバック
+URLの『http://www.example.com/users/twitter_callback』を修正して
+ください。他にもビュー内にいくつかhttp://www.example.com/があるの
+で修正してください。
+
+
+
+あとは上に書いてある『必要なプログラム』の設定を行えば動きます。
+OAuth周りですね。
+
+データベースは以下のような形です。
+phpMyAdminでSQLエクスポートしただけなので動くかは未確認。
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `screen_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `access_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `access_token_secret` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `icon` tinyint(4) NOT NULL DEFAULT '1',
+  `count` int(11) NOT NULL DEFAULT '20',
+  `footer` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login_id` (`login_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE `addresses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ipaddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `login_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+-----------------------------------------------------------------
+■その他
+-----------------------------------------------------------------
+　認証されたOAuthトークンを使い回して遊ぶ、アプリケーション集合体
+も目指しています。その第一弾として『matomes_controller.php』辺りを
+作ってみました。参考にして色々開発してみるのもありかも知れません。
+　夢は某携帯ゲームSNSみたいな感じです(笑)。
+
+
+-----------------------------------------------------------------
+■連絡先
+-----------------------------------------------------------------
+メール:hosimitu+k-twi@gmail.com
+スパムに行かないように+以降もお願いします。
+
+
+
+-----------------------------------------------------------------
+■最後に
+-----------------------------------------------------------------
+　このプログラムが発展して非パケット定額ユーザーもtwitterを多く楽し
+めるようになれればと思います。開発を協力してくれる人がいたらお願い
+します。
+　また、プログラムを置けるサーバーがあればOAuthを登録し直して作り
+直してみようかなと考えています。

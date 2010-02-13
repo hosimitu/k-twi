@@ -1,0 +1,60 @@
+@charset "utf-8";
+body {
+	background: #ffffcc;
+	font: 75%/170% "メイリオ","Meiryo","ＭＳ Ｐゴシック","MS PGothic",sans-serif;
+}
+
+table {
+	margin: 1px;
+    border-collapse: collapse;
+    background-color: silver;
+}
+tr {
+    background-color: white;
+}
+th, td {
+    border: black solid 1px;
+}
+th {
+    background-color:#CCCCFF;
+    font-weight: bold;
+}
+
+h3 {
+	width: 210px;
+	margin: auto;
+	padding:6px 0;
+	font: normal 30px/100%;
+}
+#page {
+	width: 940px;
+	margin: auto;
+	overflow:hidden;
+}
+
+.container {
+	float:left;
+	width: 720px;
+	margin: auto;
+}
+
+.sidebar {
+	width: 220px;
+	float:right;
+}
+
+.sidebar div.con {
+	background: #ff9933;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-bottom: 20px;
+	word-break: break-all;
+}
+.footer {
+	float: clear;
+	height: 30px;
+}
+
+#update {
+	margin: 0 0 10px 0;
+}
