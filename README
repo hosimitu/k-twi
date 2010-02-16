@@ -17,10 +17,10 @@ URL:http://twitter.hosimitu.com/
 それぞれの使い方はそれぞれの場所で。
 
 OAuth consumer component
-git://github.com/cakebaker/oauth-consumer-component.git
+http://github.com/cakebaker/oauth-consumer-component
 
 KtaiLibrary
-git://github.com/MASA-P/KtaiLibrary.git
+http://github.com/MASA-P/KtaiLibrary
 
 
 -----------------------------------------------------------------
