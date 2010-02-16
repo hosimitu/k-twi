@@ -65,7 +65,7 @@ class UsersController extends AppController {
 		);
 		
 		$data = $this->User->find('first', $params);
-		
+
 		//データが存在しない場合はブラックリストに追加してホーム画面へ
 		if ($data === false) {
 			$data = array(
@@ -82,6 +82,10 @@ class UsersController extends AppController {
 			return;
 		}
 		
+		//セッションにログイン情報を格納する
+		$this->Session->renew();
+		$this->Session->write("auth", $data["User"]);
+		
 		//既存データがある時上書きする(modifiedを更新するため)。
 		if ($data !== false) {
 			$this->User->id = intval($data['User']['id']);
@@ -92,10 +96,6 @@ class UsersController extends AppController {
 				);
 			$this->User->save($data,false);
 		}
-		
-		//セッションにログイン情報を格納する
-		$this->Session->renew();
-		$this->Session->write("auth", $data['User']);
 		
 		//エラー処理
 		if ($page === "replies") {
@@ -122,7 +122,7 @@ class UsersController extends AppController {
 	 */
 	function add() {
 		//本番用
-		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://twitter.com/oauth/request_token', 'http://www.example.com/users/twitter_callback');
+		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://twitter.com/oauth/request_token', 'http://twitter.hosimitu.com/users/twitter_callback');
 		//ローカル用
 //		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://twitter.com/oauth/request_token', 'http://localhost/cake/users/twitter_callback');
 		$this->Session->write('twitter_request_token', $requestToken);
@@ -315,7 +315,6 @@ class UsersController extends AppController {
 	 * フォロー/フォロワー管理
 	 * http://設置URL/users/followers
 	 */
-	 //pageはいずれ廃止になるそうです。cursorは戻り値がエラーを吐いたりするのでどうしたものか。
 /*
 	function followers(){
 		$auth = $this->Session->read("auth");

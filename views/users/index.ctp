@@ -32,9 +32,8 @@
 	</ul>
 <br />
 <div style="font-weight:bold; font-size: 16px; color:red;">注意事項</div>
-<p>2010年1月27日現在 twitterへの認証がうまくいかずTLが取得出来ない病が発病しています。ヘルプミー。</p>
 <p>
-	まだまだ開発途中です。<br />
+	まだまだ開発途中です。( ･ω･)っ<a href="http://github.com/hosimitu/k-twi">http://github.com/hosimitu/k-twi</a><br />
 	docomoしかテスト出来ていません。<br />
 	twitter中毒の人はパケット定額に入らないとキツいかも知れません。<br />
 	また突然アクセス不能になったりする可能性があります（レンタルサーバーなので）。<br />
@@ -50,13 +49,13 @@ echo $html->link($html->image("Sign-in-with-Twitter-lighter.png", array("style" 
 ?>
 <p>
 	開発は@<?php echo $html->link("hosimitu", 'http://twitter.com/hosimitu');?>が行っています。<br />
-	PHPで開発しています。<br />
+	CakePHPで開発しています。<br />
 	感想や不具合報告などお待ちしています。
 	<?php echo $html->link("感想・不具合報告フォームへ","https://ssl.form-mailer.jp/fms/df5d9ff778085") ?>
 </p>
 <p>
 	名前の由来は、携帯でtwitter、略して『k-twi』です。<br />
-	また読み方は『けーつい』で、『けーつい→頸椎』と言う含みも。意味は無いですが。<br />
+	また読み方は『けーつい』で、CakePHPとも若干かかっていたり。<br />
 	『<?php echo $html->link("Ｑ＆Ａ","/qanda.html") ?>』も用意しました。
 </p>
 <div style="font-weight:bold; font-size: 16px;">今後の予定</div>
@@ -88,7 +87,7 @@ echo $html->link($html->image("Sign-in-with-Twitter-lighter.png", array("style" 
 </p>
 <div style="font-weight:bold; font-size: 16px;">今できること</div>
 	<ul>
-		<li>ホームのTLが取得できる</li>
+		<li><S>ホームのTLが取得できる</S></li>
 		<li>発言できる</li>
 		<li>ふぁぼれる</li>
 		<li>自分宛の＠が見れる</li>
@@ -120,13 +119,13 @@ echo $html->link($html->image("Sign-in-with-Twitter-lighter.png", array("style" 
 </p>
 <p>
 	開発は@<?php echo $html->link("hosimitu", 'http://twitter.com/hosimitu');?>が行っています。<br />
-	PHPで開発しています。<br />
+	CakePHPで開発しています。<br />
 	感想等お待ちしてます。<br />
 	<?php echo $html->link("感想・不具合報告フォームへ","https://ssl.form-mailer.jp/fms/df5d9ff778085") ?>
 </p>
 <p>
 	名前の由来は、携帯でtwitter、略して『k-twi』です。<br />
-	また読み方は『けーつい』で、『けーつい→頸椎』と言う含みも。意味は無いですが。
+	また読み方は『けーつい』で、CakePHPとも若干かかっていたり。
 </p>
 <?php echo $this->renderElement("footer"); ?>
 </div>
