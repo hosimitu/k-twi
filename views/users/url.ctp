@@ -11,22 +11,17 @@
 URLは他人に教えないようにしてください<br />
 このページをブックマークすることをお薦めします
 <br />
-<br />
-<p>どうもけーついでAPIが使えなくなっているようです。<br />
-申し訳ありませんが他のtwitterツールを使用してください。</p>
-<br />
-<br />
 <?php
 echo $html->link('タイムラインへ', "/users/login/".$login_id);
 ?>
 <br /><br />
 <?php
-echo $form->text('', array("value" => "http://www.example.com/users/url/".$login_id, "size" => "60"));
+echo $form->text('', array("value" => "http://twitter.hosimitu.com/users/url/".$login_id, "size" => "60"));
 ?>
 <br />
 <?php
 if( !$ktai->is_ktai() ){
-	echo $ktai->get_qrcode("http://www.example.com/users/url/".$login_id,$options = array('width' => 220,'height' => 220,'margin' => 0.1));
+	echo $ktai->get_qrcode("http://twitter.hosimitu.com/users/url/".$login_id,$options = array('width' => 220,'height' => 220,'margin' => 0.1));
 } ?>
 <h4>ツール</h4>
 <?php echo $html->link("発言するだけ", "/users/login/".$login_id."/replies"); ?>
