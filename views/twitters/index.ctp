@@ -40,32 +40,66 @@ echo $html->link('設定を変更', '/users/setting', array('accesskey' => 4));
 			<?php }else{ ?>
 				<div>
 			<?php }?>
-			<?php echo $html->image("http://img.tweetimag.es/i/".$status->user->id."_m", array('width'=>'32', 'height'=>'32')); ?>
-			<?php echo $html->link(h($status->user->screen_name), "/twitters/user/".$status->user->id); ?>
-			<br />
-			<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
-			<span style="color:#ff3300;">
-			<?php } ?>
-			<?php
-			$text = preg_replace('/@(\w+)/', '@<a href="/twitters/user/$1">$1</a>', $status->text);
-			$text = preg_replace('/(https?:\/\/[-_\.!~a-zA-Z0-9;\/?:@&=+$,%#]+)(\s?)/i', '<a href="$1">$1</a>$2', $text);
-			echo $text;
-			?>
-			<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
-			</span>
-			<?php } ?>
-			<br /><small>
-			<?php echo h($time->format('Y/m/d H:i:s', $status->created_at)); ?></small><br />
-			<?php echo $html->link("Re", "/twitters/reply/".h($status->user->screen_name)."/".h($status->id)); ?> 
-			<?php echo $html->link("☆", "/twitters/fav/".h($status->id)); ?> 
-			<?php echo $html->link("RT", "/twitters/rt/".h($status->id)); ?> 
-			<?php echo '<input type="checkbox" name="data[replies]['.$i.']" value="'.h($status->user->screen_name).'" id="replies'.$i.'" />'; $i++; ?> 
-			<?php if (intval($status->in_reply_to_status_id) > 1 ) {
-						echo "[";
-						echo $html->link("返事元", "/twitters/inreply/".h($status->in_reply_to_status_id));
-						echo "]";
-					}
-			 ?>
+				<?php if($status->retweeted_status->id > 0){ //リツイートだった場合?>
+					<span style="color:#009900;">
+					<?php echo $html->image("http://img.tweetimag.es/i/".$status->retweeted_status->user->id."_m", array('width'=>'32', 'height'=>'32')); ?>
+					<?php echo $html->link(h($status->retweeted_status->user->screen_name), "/twitters/user/".$status->retweeted_status->user->id); ?>
+					<br />
+					<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
+						<span style="color:#ff3300;">
+					<?php } ?>
+					<?php
+					$text = preg_replace('/@(\w+)/', '@<a href="/twitters/user/$1">$1</a>', $status->text);
+					$text = preg_replace('/(https?:\/\/[-_\.!~a-zA-Z0-9;\/?:@&=+$,%#]+)(\s?)/i', '<a href="$1">$1</a>$2', $text);
+					$text = preg_replace('/^RT /', '', $text);
+					echo $text;
+					?>
+					<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
+						</span>
+					<?php } ?>
+					<br /><small>
+					<?php echo h($time->format('Y/m/d H:i:s', $status->created_at)); ?></small><br />
+					<?php echo $html->link("Re", "/twitters/reply/".h($status->user->screen_name)."/".h($status->id)); ?> 
+					<?php echo $html->link("☆", "/twitters/fav/".h($status->id)); ?> 
+					<?php echo $html->link("RT", "/twitters/rt/".h($status->id)); ?> 
+					<?php echo '<input type="checkbox" name="data[replies]['.$i.']" value="'.h($status->user->screen_name).'" id="replies'.$i.'" />'; $i++; ?> 
+					<?php if (intval($status->in_reply_to_status_id) > 1 ) {
+								echo "[";
+								echo $html->link("返事元", "/twitters/inreply/".h($status->in_reply_to_status_id));
+								echo "]";
+							}
+					 ?>
+					<br />
+					<small>@<?php echo $html->link(h($status->user->screen_name), "/twitters/user/".$status->user->id); ?>がリツイートしました</small>
+					</span>
+				<?php }else{  //普通の発言?>
+					<?php echo $html->image("http://img.tweetimag.es/i/".$status->user->id."_m", array('width'=>'32', 'height'=>'32')); ?>
+					<?php echo $html->link(h($status->user->screen_name), "/twitters/user/".$status->user->id); ?>
+					<br />
+					<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
+						<span style="color:#ff3300;">
+					<?php } ?>
+					<?php
+					$text = preg_replace('/@(\w+)/', '@<a href="/twitters/user/$1">$1</a>', $status->text);
+					$text = preg_replace('/(https?:\/\/[-_\.!~a-zA-Z0-9;\/?:@&=+$,%#]+)(\s?)/i', '<a href="$1">$1</a>$2', $text);
+					echo $text;
+					?>
+					<?php if (preg_match("/".$screen_name."/", $status->text)) { ?>
+						</span>
+					<?php } ?>
+					<br /><small>
+					<?php echo h($time->format('Y/m/d H:i:s', $status->created_at)); ?></small><br />
+					<?php echo $html->link("Re", "/twitters/reply/".h($status->user->screen_name)."/".h($status->id)); ?> 
+					<?php echo $html->link("☆", "/twitters/fav/".h($status->id)); ?> 
+					<?php echo $html->link("RT", "/twitters/rt/".h($status->id)); ?> 
+					<?php echo '<input type="checkbox" name="data[replies]['.$i.']" value="'.h($status->user->screen_name).'" id="replies'.$i.'" />'; $i++; ?> 
+					<?php if (intval($status->in_reply_to_status_id) > 1 ) {
+								echo "[";
+								echo $html->link("返事元", "/twitters/inreply/".h($status->in_reply_to_status_id));
+								echo "]";
+							}
+					 ?>
+				 <?php } ?>
 			 </div>
 		<hr />
 	<?php endforeach; ?>
