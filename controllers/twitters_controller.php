@@ -23,7 +23,7 @@ class TwittersController extends AppController {
 		
 		//フレンドタイムライン取得
 		$count = $auth['count'];
-		$url = "http://twitter.com/statuses/friends_timeline.xml";
+		$url = "http://api.twitter.com/1/statuses/home_timeline.xml";
 		if ($count !== 20) {
 			$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("count"=>$count));
 		} else {
@@ -51,7 +51,7 @@ class TwittersController extends AppController {
 		$auth = $this->Session->read("auth");
 		
 		//API残り調査
-		$url = "http://twitter.com/account/rate_limit_status.xml";
+		$url = "http://api.twitter.com/1/account/rate_limit_status.xml";
 		$nokori = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 		$st = $ed = 0;
 		$matches = array();
@@ -77,15 +77,15 @@ class TwittersController extends AppController {
 		if (mb_strlen($mes,"UTF-8") > 140){
 			$this->set("moji_suu", false);
 			$this->set("value", $mes);
-			$this->set("toukou_kanryo", true);
+			$this->set("toukou_kanryo", false);
 			$this->render("/twitters/post");
 			return;
 		}
 
 		if ( ($this->data['mes'] !== null) && isset($this->data['in_reply_id']) ) {
-			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://twitter.com/statuses/update.xml', array('status' => $mes, "in_reply_to_status_id" => $this->data['in_reply_id']) );
+			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://api.twitter.com/1/statuses/update.xml', array('status' => $mes, "in_reply_to_status_id" => $this->data['in_reply_id']) );
 		} elseif( ($this->data['mes'] !== null) && !isset($this->data['in_reply_id']) ) {
-			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://twitter.com/statuses/update.xml', array('status' => $mes) );
+			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://api.twitter.com/1/statuses/update.xml', array('status' => $mes) );
 		} else {
 			$this->redirect("/twitters");
 		}
@@ -141,7 +141,7 @@ class TwittersController extends AppController {
 	function fav($status_number = null){
 		$auth = $this->Session->read("auth");
 		if ($status_number !== "") {
-			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://twitter.com/favorites/create/'.$status_number.'.xml' );
+			$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://api.twitter.com/1/favorites/create/'.$status_number.'.xml' );
 		} else {
 			$this->redirect("/twitters");
 		}
@@ -157,7 +157,7 @@ class TwittersController extends AppController {
 		}
 
 		$auth = $this->Session->read("auth");
-		$url = "http://twitter.com/statuses/retweet/".$status_number.".xml";
+		$url = "http://api.twitter.com/1/statuses/retweet/".$status_number.".xml";
 		$req = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array() );
 	}
 	
@@ -178,12 +178,12 @@ class TwittersController extends AppController {
 		$auth = $this->Session->read("auth");
 		
 		//ユーザー情報を取得
-		$url = "http://twitter.com/users/show/".$user_id.".xml";
+		$url = "http://api.twitter.com/1/users/show/".$user_id.".xml";
 		$show = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 		$show = simplexml_load_string($show);
 		
 		//ユーザー個別のTLを取得
-		$url = "http://twitter.com/statuses/user_timeline/".$user_id.".xml";
+		$url = "http://api.twitter.com/1/statuses/user_timeline/".$user_id.".xml";
 		$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("page" => $page));
 		$timeline = simplexml_load_string($timeline);
 
@@ -209,7 +209,7 @@ class TwittersController extends AppController {
 		if (isset($this->data["page"])) {
 			$page = $this->data["page"];
 		}
-		$url = "http://twitter.com/statuses/replies.xml";
+		$url = "http://api.twitter.com/1/statuses/mentions.xml";
 		$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("page" => $page));
 		$timeline = simplexml_load_string($timeline);
 		
@@ -233,7 +233,7 @@ class TwittersController extends AppController {
 		if (isset($this->data["page"])) {
 			$page = $this->data["page"];
 		}
-		$url = "http://twitter.com/direct_messages.xml";
+		$url = "http://api.twitter.com/1/direct_messages.xml";
 		$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("page" => $page));
 		$timeline = simplexml_load_string($timeline);
 		
@@ -259,7 +259,7 @@ class TwittersController extends AppController {
 		$auth = $this->Session->read("auth");
 		
 		//フォローする
-		$url = "http://twitter.com/friendships/create/".$user_id.".xml";
+		$url = "http://api.twitter.com/1/friendships/create/".$user_id.".xml";
 
 		$timeline = $this->OauthConsumer->post('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 		//エラー処理
@@ -278,7 +278,7 @@ class TwittersController extends AppController {
 		if (isset($this->data["page"])){
 			$page = $this->data["page"];
 		}
-		$url = "http://twitter.com/statuses/friends_timeline.xml";
+		$url = "http://api.twitter.com/1/statuses/home_timeline.xml";
 		$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("page" => $page));
 		$timeline = simplexml_load_string($timeline);
 		
@@ -304,7 +304,7 @@ class TwittersController extends AppController {
 		
 		$auth = $this->Session->read("auth");
 		//リプライズ取得
-		$url = "http://twitter.com/statuses/show/".$status_id.".xml";
+		$url = "http://api.twitter.com/1/statuses/show/".$status_id.".xml";
 		$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 		$timeline = simplexml_load_string($timeline);
 		
@@ -328,7 +328,7 @@ class TwittersController extends AppController {
 		if (isset($this->data["count"])){
 			$count = $this->data["count"];
 		}
-		$url = "http://twitter.com/statuses/friends_timeline.xml";
+		$url = "http://api.twitter.com/1/statuses/home_timeline.xml";
 		if ($count !== 20) {
 			$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array("count"=>$count));
 		} else {
