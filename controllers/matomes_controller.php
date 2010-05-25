@@ -1,19 +1,10 @@
 <?php
 class MatomesController extends AppController {
 	var $name = "Matomes";
+	var $uses = array('Toi');
 	var $components = array('OauthConsumer', 'Ktai');
-	var $uses = array();
-	var $needAuth = true;
-	var $helpers = array('Html', 'Form', 'Time', 'Ktai', 'Css');
-	var $ktai = array(							//携帯でのセッション等の設定
-			'enable_ktai_session' => true, 			//セッション使用を有効にします
-			'use_redirect_session_id' => false, 	//リダイレクトに必ずセッションIDをつけます
-			'imode_session_name' => 'csid', 		//iMODE時のセッション名を変更します
-			'use_img_emoji' => true, 				//画像絵文字を使用
-			'input_encoding'  => 'UTF-8', 			//入力をUTF-8に変更
-			'output_encoding' => 'UTF-8', 			//出力をUTF-8に変更
-		);
-	
+	var $helpers = array('Html', 'Form', 'Time');
+
 	/**
 	 * インデックス画面表示
 	 * http://設置URL/matomes/
@@ -107,7 +98,7 @@ class MatomesController extends AppController {
 		
 				settype($status_number, "float");
 				if($status_number > 0){
-					$url = 'http://twitter.com/statuses/show/'.$status_number.'.xml';
+					$url = 'http://api.twitter.com/1/statuses/show/'.$status_number.'.xml';
 					$timeline = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 				}
 				$xml = simplexml_load_string($timeline);
@@ -251,7 +242,7 @@ class MatomesController extends AppController {
 		$auth = $this->Session->read("auth");
 		
 		//API残り調査
-		$url = "http://twitter.com/account/rate_limit_status.xml";
+		$url = "http://api.twitter.com/1/account/rate_limit_status.xml";
 		$nokori = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
 		$st = $ed = 0;
 		$matches = array();
