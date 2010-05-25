@@ -23,6 +23,35 @@
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php
+if( $ktai->is_ktai() ){
+  // Copyright 2009 Google Inc. All Rights Reserved.
+  $GA_ACCOUNT = "MO-4251498-11";
+  $GA_PIXEL = "ga.php";
+
+  function googleAnalyticsGetImageUrl() {
+    global $GA_ACCOUNT, $GA_PIXEL;
+	$GA_ACCOUNT = "MO-4251498-11";
+	$GA_PIXEL = "ga.php";
+    $url = "http://twitter.hosimitu.com/";
+    $url .= $GA_PIXEL . "?";
+    $url .= "utmac=" . $GA_ACCOUNT;
+    $url .= "&utmn=" . rand(0, 0x7fffffff);
+    $referer = $_SERVER["HTTP_REFERER"];
+    $query = $_SERVER["QUERY_STRING"];
+    $path = $_SERVER["REQUEST_URI"];
+    if (empty($referer)) {
+      $referer = "-";
+    }
+    $url .= "&utmr=" . urlencode($referer);
+    if (!empty($path)) {
+      $url .= "&utmp=" . urlencode($path);
+    }
+    $url .= "&guid=ON";
+    return str_replace("&", "&amp;", $url);
+  }
+}
+?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php echo $html->charset(); ?>
@@ -47,7 +76,11 @@ border-right: 10px solid #ccffcc;
 -->
 </style>
 </head>
+<?php if( !$ktai->is_ktai() ){ //パソコンだった時 ?>
 <body bgcolor="#ccffcc" text="#000000" link="#3333ff" vlink="#3333ff" alink=#ff6600>
+<?php }else{ //携帯だった時?>
+<body bgcolor="#ffffff" text="#000000" link="#3333ff" vlink="#3333ff" alink=#ff6600>
+<?php } ?>
 <?php if( !$ktai->is_ktai() && (!$auth) ){ ?>
 <div>
 <?php }; ?>
@@ -63,5 +96,11 @@ border-right: 10px solid #ccffcc;
 <?php if( !$ktai->is_ktai() && (!$auth) ){	//パソコンの時のページ生成?>
 </div>
 <?php }; ?>
+<?php
+if( $ktai->is_ktai() ){
+	//google analytics
+	$googleAnalyticsImageUrl = googleAnalyticsGetImageUrl();
+?>
+<img src="<?php echo $googleAnalyticsImageUrl ?>" /><?php } ?>
 </body>
 </html>
