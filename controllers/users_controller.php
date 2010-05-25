@@ -97,7 +97,6 @@ class UsersController extends AppController {
 			$this->User->save($data,false);
 		}
 		
-		//エラー処理
 		if ($page === "replies") {
 			$this->redirect('/twitters/replies');
 		} elseif($page === "matomes"){
@@ -122,11 +121,11 @@ class UsersController extends AppController {
 	 */
 	function add() {
 		//本番用
-		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://twitter.com/oauth/request_token', 'http://twitter.hosimitu.com/users/twitter_callback');
+		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://api.twitter.com/oauth/request_token', 'http://twitter.hosimitu.com/users/twitter_callback');
 		//ローカル用
-//		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://twitter.com/oauth/request_token', 'http://localhost/cake/users/twitter_callback');
+//		$requestToken = $this->OauthConsumer->getRequestToken('Twitter', 'http://api.twitter.com/oauth/request_token', 'http://localhost/cake/users/twitter_callback');
 		$this->Session->write('twitter_request_token', $requestToken);
-		$this->redirect('http://twitter.com/oauth/authorize?oauth_token=' . $requestToken->key);
+		$this->redirect('http://api.twitter.com/oauth/authorize?oauth_token=' . $requestToken->key);
 	}
 	
 	/**
@@ -140,9 +139,9 @@ class UsersController extends AppController {
 			$this->redirect('/');
 		}
 		$requestToken = $this->Session->read('twitter_request_token');
-		$accessToken = $this->OauthConsumer->getAccessToken('Twitter', 'http://twitter.com/oauth/access_token', $requestToken);
+		$accessToken = $this->OauthConsumer->getAccessToken('Twitter', 'http://api.twitter.com/oauth/access_token', $requestToken);
 		if (empty($accessToken)) $this->redirect('/');
-		$xml = $this->OauthConsumer->get('Twitter', $accessToken->key, $accessToken->secret, 'http://twitter.com/account/verify_credentials.xml', array());
+		$xml = $this->OauthConsumer->get('Twitter', $accessToken->key, $accessToken->secret, 'http://api.twitter.com/1/account/verify_credentials.xml', array());
 		$xml = simplexml_load_string($xml);
 		$screen_name = $xml->screen_name;
 		settype($screen_name, "string");
@@ -322,7 +321,7 @@ class UsersController extends AppController {
 			$this->redirect('/twitters/');
 		}
 		//フォロー/フォロワー数を取得
-		$xml = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://twitter.com/account/verify_credentials.xml', array());
+		$xml = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], 'http://api.twitter.com/1/account/verify_credentials.xml', array());
 		$xml = simplexml_load_string($xml);
 		$screen_name = $xml->screen_name;
 		settype($screen_name, "string");
@@ -338,7 +337,7 @@ class UsersController extends AppController {
 		$nowtime = time();
 //pageを使う時
 		//API呼び出し
-		$url = "http://twitter.com/statuses/friends/".$screen_name.".xml";
+		$url = "http://api.twitter.com/1/statuses/friends.xml";
 		$page = 1;
 		$friends_array = array();
 		$sinin = array();
@@ -367,7 +366,7 @@ class UsersController extends AppController {
 			++$page;
 		}
 
-		$url = "http://twitter.com/statuses/followers/".$screen_name.".xml";
+		$url = "http://api.twitter.com/1/statuses/followers.xml";
 		$page = 1;
 		$followers_array = array();
 		$kataomoware = array();
@@ -393,7 +392,7 @@ class UsersController extends AppController {
 		}
 //cursorを使う時
 		//API呼び出し
-		$url = "http://twitter.com/statuses/friends/".$screen_name.".xml";
+		$url = "http://api.twitter.com/1/statuses/friends.xml";
 		$cursor = -1;
 		$friends_array = array();
 		$sinin = array();
@@ -430,7 +429,7 @@ class UsersController extends AppController {
 			sleep(2);
 		}
 
-		$url = "http://twitter.com/statuses/followers/".$screen_name.".xml";
+		$url = "http://api.twitter.com/1/statuses/followers.xml";
 		$cursor = -1;
 		$followers_array = array();
 		$kataomoware = array();
