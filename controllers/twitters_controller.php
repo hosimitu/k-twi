@@ -51,16 +51,26 @@ class TwittersController extends AppController {
 		$auth = $this->Session->read("auth");
 		
 		//API残り調査
-		$url = "http://api.twitter.com/1/account/rate_limit_status.xml";
-		$nokori = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
-		$st = $ed = 0;
-		$matches = array();
-		$st = strpos($nokori, '<remaining-hits type="integer">', $ed);
-//		if($st===false) break;
-		$ed = strpos($nokori, '</remaining-hits>', $st);
-		$line = substr($nokori, $st, $ed-$st);
-		preg_match('/<remaining-hits type="integer">(.+)/', $line, $matches);
-		return $matches[1];
+		if( (Cache::read("api_time_".$auth['screen_name'], "one_hour")) === false ) {		//キャッシュが無かったらAPIの回数を取得
+			$url = "http://api.twitter.com/1/account/rate_limit_status.xml";
+			$nokori = $this->OauthConsumer->get('Twitter', $auth['access_token'], $auth['access_token_secret'], $url, array());
+			$st = $ed = 0;
+			$matches = array();
+			$st = strpos($nokori, '<remaining-hits type="integer">', $ed);
+	//		if($st===false) break;
+			$ed = strpos($nokori, '</remaining-hits>', $st);
+			$line = substr($nokori, $st, $ed-$st);
+			preg_match('/<remaining-hits type="integer">(.+)/', $line, $matches);
+			$api_nokori = $matches[1];
+			
+			Cache::write('api_time_'.$auth['screen_name'], $api_nokori, "one_hour");
+			Cache::write('api_nokori_'.$auth['screen_name'], $api_nokori, "one_hour");
+		}else{
+			$api_nokori = Cache::read("api_nokori_".$auth['screen_name'], "one_hour");
+			$api_nokori = $api_nokori -1;
+			Cache::write('api_nokori_'.$auth['screen_name'], $api_nokori, "one_hour");
+		}
+		return $api_nokori;
 	}
 	
 	/**
