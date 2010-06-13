@@ -38,48 +38,52 @@ class UsersController extends AppController {
 		
 		//古いセッションを破棄
 		$this->Session->delete('auth');
-
-		//ブラックリストに存在しているかチェック（3回以上でホーム画面へ）
-		$this->address = ClassRegistry::init('Address');
-//		$ipaddress = $this->RequestHandler->getClientIP();
-		$ipaddress = $_SERVER["REMOTE_ADDR"];
-		$param = array(
-			'conditions' => array(
-				'ipaddress' => $ipaddress
-			)
-		);
-		$data = $this->address->find('all', $param);
-		if ($data !== false) {
-			$count = count($data);
-			if ($count >= 5){
-				$this->redirect('/');
+		
+		if( ($data = Cache::read("url_".$login_id, "seven_days")) === false ) {		//キャッシュが無かったらOAuth用のデータを取ってくる
+			//ブラックリストに存在しているかチェック（3回以上でホーム画面へ）
+			$this->address = ClassRegistry::init('Address');
+	//		$ipaddress = $this->RequestHandler->getClientIP();
+			$ipaddress = $_SERVER["REMOTE_ADDR"];
+			$param = array(
+				'conditions' => array(
+					'ipaddress' => $ipaddress
+				)
+			);
+			$data = $this->address->find('all', $param);
+			if ($data !== false) {
+				$count = count($data);
+				if ($count >= 5){
+					$this->redirect('/');
+					return;
+				}
+			}
+	
+			//URLから渡された引数を元にユーザーデータの検索
+			$params = array(
+				'conditions' => array(
+					'login_id =' => $login_id
+				)
+			);
+			
+			$data = $this->User->find('first', $params);
+	
+			//データが存在しない場合はブラックリストに追加してホーム画面へ
+			if ($data === false) {
+				$data = array(
+					'Address' => array(
+						'id' => null,
+						'ipaddress' => $ipaddress,
+						'login_id' => $login_id
+						)
+					);
+				$this->address->create();
+				$this->address->save($data,false);
+				
+				$this->set("login_error", true);
 				return;
 			}
-		}
-
-		//URLから渡された引数を元にユーザーデータの検索
-		$params = array(
-			'conditions' => array(
-				'login_id =' => $login_id
-			)
-		);
-		
-		$data = $this->User->find('first', $params);
-
-		//データが存在しない場合はブラックリストに追加してホーム画面へ
-		if ($data === false) {
-			$data = array(
-				'Address' => array(
-					'id' => null,
-					'ipaddress' => $ipaddress,
-					'login_id' => $login_id
-					)
-				);
-			$this->address->create();
-			$this->address->save($data,false);
 			
-			$this->set("login_error", true);
-			return;
+			Cache::write('url_'.$login_id, $data, "seven_days");
 		}
 		
 		//セッションにログイン情報を格納する
