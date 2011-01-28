@@ -31,7 +31,7 @@ if( $ktai->is_ktai() ){
 
   function googleAnalyticsGetImageUrl() {
     global $GA_ACCOUNT, $GA_PIXEL;
-	$GA_ACCOUNT = "MO-4251498-11";
+	$GA_ACCOUNT = "**************";
 	$GA_PIXEL = "ga.php";
     $url = "http://www.example.com/";
     $url .= $GA_PIXEL . "?";
