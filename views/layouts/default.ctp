@@ -26,14 +26,14 @@
 <?php
 if( $ktai->is_ktai() ){
   // Copyright 2009 Google Inc. All Rights Reserved.
-  $GA_ACCOUNT = "MO-4251498-11";
+  $GA_ACCOUNT = "**************";
   $GA_PIXEL = "ga.php";
 
   function googleAnalyticsGetImageUrl() {
     global $GA_ACCOUNT, $GA_PIXEL;
 	$GA_ACCOUNT = "MO-4251498-11";
 	$GA_PIXEL = "ga.php";
-    $url = "http://twitter.hosimitu.com/";
+    $url = "http://www.example.com/";
     $url .= $GA_PIXEL . "?";
     $url .= "utmac=" . $GA_ACCOUNT;
     $url .= "&utmn=" . rand(0, 0x7fffffff);
